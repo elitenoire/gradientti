@@ -2,6 +2,9 @@
 @tailwind components;
 @tailwind utilities;
 
+:root {
+  --fa-display: block;
+}
 html,
 body,
 #root {
