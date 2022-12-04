@@ -4,6 +4,7 @@ import useSequence from './useSequence'
 import { gradients } from './gradients'
 
 const initialGradient = {
+  name: 'Cosmic Tail',
   start: '#780206',
   end: '#061161',
 }
