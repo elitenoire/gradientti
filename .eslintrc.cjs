@@ -27,4 +27,9 @@ module.exports = {
     'react/prop-types': 0,
     'react/jsx-props-no-spreading': 0,
   },
+  settings: {
+    tailwindcss: {
+      whitelist: ['animate\\-fadeIn', 'line\\-numbers', 'language\\-css'],
+    },
+  },
 }

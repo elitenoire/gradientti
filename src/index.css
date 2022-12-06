@@ -10,3 +10,10 @@ body,
 #root {
   height: 100%;
 }
+
+.btn {
+  @apply text-white font-medium py-2.5 px-5 rounded-lg text-sm text-center focus:ring-4 focus:outline-none active:scale-95 transition-transform duration-200;
+}
+.btn-primary {
+  @apply bg-gradient-to-tr from-fuchsia-500 via-violet-600 to-blue-400 hover:bg-gradient-to-tl focus:ring-violet-300;
+}
