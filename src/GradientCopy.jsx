@@ -59,7 +59,7 @@ function GradientCopy({ start, end, open, onClose }) {
         <span className="h-5 w-5 rounded-full ring-2 ring-gray-800 ring-offset-2" style={{ backgroundColor: start }} />
         <span className="h-5 w-5 rounded-full ring-2 ring-gray-800 ring-offset-2" style={{ backgroundColor: end }} />
       </Modal.Title>
-      <div className="relative mt-2 mb-4">
+      <div className="relative mb-4">
         <CodeBlock code={code} />
         <Transition
           show={copied}
