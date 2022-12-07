@@ -1,10 +1,13 @@
 import { useState, useCallback, useEffect } from 'react'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faAnglesLeft, faPlus, faCode, faBars } from '@fortawesome/free-solid-svg-icons'
+import { useModalState } from './Modal'
 import Splash from './Splash'
 import GradientCopy from './GradientCopy'
+import GradientAdd from './GradientAdd'
 import useSequence from './useSequence'
 import { gradients } from './gradients'
+import { insertAt } from './utils'
 
 const initialGradient = {
   name: 'Cosmic Tail',
@@ -12,24 +15,32 @@ const initialGradient = {
   end: '#061161',
 }
 
-const palette = [initialGradient, ...gradients]
+const rawPalette = [initialGradient, ...gradients]
 
 function App() {
   const [loading, setLoading] = useState(true)
-  const [openCopyModal, setOpenCopyModal] = useState(false)
+  const [gradientList, setGradientList] = useState(rawPalette)
+
+  const [openCopyModal, handleOpenCopyModal, handleCloseCopyModal] = useModalState()
+  const [openAddModal, handleOpenAddModal, handleCloseAddModal] = useModalState()
+
   const { count, increment, decrement } = useSequence({
-    end: palette.length - 1,
+    end: gradientList.length - 1,
   })
 
-  const { name, start, end } = palette[count]
+  const gradient = gradientList[count]
+  const { name, start, end } = gradient
 
-  const handleOpenCopyModal = useCallback(() => {
-    setOpenCopyModal(true)
-  }, [])
-
-  const handleCloseCopyModal = useCallback(() => {
-    setOpenCopyModal(false)
-  }, [])
+  const handleGradientAdd = useCallback(
+    newGradient => {
+      setGradientList(list => {
+        const index = count === list.length - 1 ? 0 : count + 1
+        return insertAt(list, index, newGradient)
+      })
+      increment()
+    },
+    [count, increment]
+  )
 
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -46,7 +57,7 @@ function App() {
       {loading ? (
         <Splash />
       ) : (
-        <div className="animate-fadeIn h-full">
+        <div className="h-full animate-fadeIn">
           <header className="fixed inset-x-0 top-0 px-4 pt-2 text-white sm:pt-4">
             <div className="flex flex-wrap items-center justify-end gap-y-6">
               <div className="mr-auto flex items-center gap-x-2">
@@ -77,7 +88,7 @@ function App() {
                 <button
                   type="button"
                   className="flex h-11 w-11 items-center justify-center rounded-full bg-white/10 transition duration-200 ease-in-out hover:scale-110 hover:bg-white/20 active:scale-95"
-                  // onClick={handleOpenAddModal}
+                  onClick={handleOpenAddModal}
                 >
                   <FontAwesomeIcon icon={faPlus} />
                 </button>
@@ -91,6 +102,12 @@ function App() {
               </div>
             </div>
             <GradientCopy start={start} end={end} open={openCopyModal} onClose={handleCloseCopyModal} />
+            <GradientAdd
+              gradient={gradient}
+              onAdd={handleGradientAdd}
+              open={openAddModal}
+              onClose={handleCloseAddModal}
+            />
           </header>
           <main className="h-full">
             <div className="absolute top-1/2 flex w-full -translate-y-1/2 items-center justify-between px-4 text-white">
