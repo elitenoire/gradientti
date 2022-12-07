@@ -8,6 +8,9 @@ module.exports = {
       fontFamily: {
         sans: ['Kumbh Sans', ...defaultTheme.fontFamily.sans],
       },
+      minHeight: {
+        swatch: '110px',
+      },
       keyframes: {
         fadeIn: {
           '0%': { opacity: 0 },

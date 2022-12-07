@@ -12,8 +12,12 @@ body,
 }
 
 .btn {
-  @apply text-white font-medium py-2.5 px-5 rounded-lg text-sm text-center focus:ring-4 focus:outline-none active:scale-95 transition-transform duration-200;
+  @apply text-white font-medium py-2.5 px-5 rounded-lg text-sm min-w-[105px] text-center focus:ring-4 focus:outline-none active:scale-95 transition-transform duration-200;
 }
 .btn-primary {
   @apply bg-gradient-to-tr from-fuchsia-500 via-violet-600 to-blue-400 hover:bg-gradient-to-tl focus:ring-violet-300;
+}
+
+.input {
+  @apply h-11 w-full rounded-xl border-0 bg-gray-200 pl-3 pr-3 focus:bg-transparent focus:ring-violet-500;
 }
