@@ -1,10 +1,9 @@
 import { useReducer, useCallback } from 'react'
+import { clamp } from './utils'
 
 const INC = 'INCREMENT'
 const DEC = 'DECREMENT'
 const GOTO = 'GOTO'
-
-const clamp = (num, lower, upper) => (upper ? Math.min(Math.max(num, lower), upper) : Math.min(num, lower))
 
 const reducer = (state, { type, index }) => {
   const { count, start, end } = state
