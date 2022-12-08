@@ -6,6 +6,7 @@ import Splash from './Splash'
 import GradientCopy from './GradientCopy'
 import GradientAdd from './GradientAdd'
 import useSequence from './useSequence'
+import useKeyNavigation from './useKeyNavigation'
 import { gradients } from './gradients'
 import { insertAt } from './utils'
 
@@ -26,6 +27,12 @@ function App() {
 
   const { count, increment, decrement } = useSequence({
     end: gradientList.length - 1,
+  })
+  const onKey = useKeyNavigation({
+    prev: decrement,
+    next: increment,
+    space: handleOpenAddModal,
+    cKey: handleOpenCopyModal,
   })
 
   const gradient = gradientList[count]
@@ -57,7 +64,8 @@ function App() {
       {loading ? (
         <Splash />
       ) : (
-        <div className="h-full animate-fadeIn">
+        // eslint-disable-next-line jsx-a11y/no-noninteractive-tabindex
+        <div role="presentation" className="h-full animate-fadeIn" tabIndex={0} onKeyDown={onKey}>
           <header className="fixed inset-x-0 top-0 px-4 pt-2 text-white sm:pt-4">
             <div className="flex flex-wrap items-center justify-end gap-y-6">
               <div className="mr-auto flex items-center gap-x-2">
