@@ -103,6 +103,7 @@ function App() {
             </div>
             <GradientCopy start={start} end={end} open={openCopyModal} onClose={handleCloseCopyModal} />
             <GradientAdd
+              gradientList={gradientList}
               gradient={gradient}
               onAdd={handleGradientAdd}
               open={openAddModal}

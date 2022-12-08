@@ -19,5 +19,13 @@ body,
 }
 
 .input {
-  @apply h-11 w-full rounded-xl border-0 bg-gray-200 pl-3 pr-3 focus:bg-transparent focus:ring-violet-500;
+  @apply h-11 w-full rounded-xl border border-transparent bg-gray-200 pl-3 pr-3 focus:bg-transparent focus:ring-violet-500;
+}
+
+.input-error {
+  @apply border-red-500;
+}
+
+.text-error {
+  @apply mt-1 text-xs font-medium tracking-wide text-red-500;
 }

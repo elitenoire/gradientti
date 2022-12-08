@@ -32,7 +32,7 @@ function Modal({ open, onClose, className = '', children }) {
         </Transition.Child>
 
         <div className="fixed inset-0 overflow-y-auto">
-          <div className="flex min-h-full items-end justify-center text-center sm:items-center sm:p-4">
+          <div className="flex min-h-full items-end justify-center overflow-hidden text-center sm:items-center sm:p-4">
             <Transition.Child
               as={Fragment}
               enter="ease-out duration-300"

@@ -3,6 +3,7 @@ import { useFloating, flip, offset, shift, arrow } from '@floating-ui/react-dom'
 import { Popover, Transition } from '@headlessui/react'
 import { HexColorPicker, HexColorInput } from 'react-colorful'
 import Modal from './Modal'
+import { checkIfExist } from './utils'
 
 const positions = {
   top: 'bottom',
@@ -11,7 +12,7 @@ const positions = {
   left: 'right',
 }
 
-function ColorInput({ color, onChange, id }) {
+function ColorInput({ color, onChange, invalid, id }) {
   const arrowRef = useRef(null)
   const {
     x,
@@ -38,7 +39,7 @@ function ColorInput({ color, onChange, id }) {
         color={color}
         onChange={onChange}
         type="text"
-        className="input pr-9"
+        className={`input${invalid ? ' input-error ' : ' '}pr-9`}
         prefixed
       />
       <Popover className="absolute inset-y-0 right-0 w-11 p-2">
@@ -82,28 +83,44 @@ function ColorInput({ color, onChange, id }) {
   )
 }
 
-function GradientMaker({ gradient = {}, onMake }) {
+function GradientMaker({ gradientList = [], gradient = {}, onMake }) {
   const [newGradient, setNewGradient] = useState(gradient)
+  const [errors, setErrors] = useState({})
 
   const { start, end, name } = newGradient
 
   const handleColorChange = useCallback(
     key => color => {
       setNewGradient(_gradient => ({ ..._gradient, [key]: color }))
+      setErrors(_errors => ({ ..._errors, gradient: '' }))
     },
     []
   )
 
-  const handleNameChange = useCallback(e => {
-    setNewGradient(_gradient => ({ ..._gradient, name: e.target.value }))
+  const handleNameChange = useCallback(({ target }) => {
+    target.setCustomValidity('')
+    setNewGradient(_gradient => ({ ..._gradient, name: target.value }))
+    setErrors(_errors => ({ ..._errors, name: '' }))
+  }, [])
+
+  const handleNameValidity = useCallback(({ target }) => {
+    if (target.validity.valueMissing) {
+      target.setCustomValidity('Name is required.')
+    } else if (target.validity.patternMismatch) {
+      target.setCustomValidity('Name is invalid. Use 2 or more letters.')
+    }
   }, [])
 
   const handleSubmit = useCallback(
     e => {
       e.preventDefault()
-      onMake?.(newGradient)
+      const { gradientExist = '', nameExist = '' } = checkIfExist(gradientList, newGradient)
+      setErrors({ name: nameExist, gradient: gradientExist })
+      if (!(gradientExist || nameExist)) {
+        onMake?.(newGradient)
+      }
     },
-    [newGradient, onMake]
+    [gradientList, newGradient, onMake]
   )
 
   return (
@@ -118,13 +135,20 @@ function GradientMaker({ gradient = {}, onMake }) {
             <label htmlFor="gradient-start" className="text-xs font-medium">
               Start Color
             </label>
-            <ColorInput id="gradient-start" color={start} onChange={handleColorChange('start')} />
+            <ColorInput
+              id="gradient-start"
+              invalid={errors.gradient}
+              color={start}
+              onChange={handleColorChange('start')}
+            />
+            {errors.gradient && <span className="text-error">Gradient already exists.</span>}
           </div>
           <div className="grow basis-52">
             <label htmlFor="gradient-end" className="text-xs font-medium">
               End Color
             </label>
-            <ColorInput id="gradient-end" color={end} onChange={handleColorChange('end')} />
+            <ColorInput id="gradient-end" invalid={errors.gradient} color={end} onChange={handleColorChange('end')} />
+            {errors.gradient && <span className="text-error">Gradient already exists.</span>}
           </div>
         </div>
         <div className="my-4">
@@ -135,10 +159,14 @@ function GradientMaker({ gradient = {}, onMake }) {
             id="gradient-name"
             value={name}
             onChange={handleNameChange}
+            onInvalid={handleNameValidity}
             placeholder="unique name"
             type="text"
-            className="input"
+            className={`input${errors.name ? ' input-error' : ''}`}
+            pattern="[a-zA-Z]+[\s]?[A-Za-z]+"
+            required
           />
+          {errors.name && <span className="text-error">Name already exists.</span>}
         </div>
         <div className="pt-1 text-right">
           <button type="submit" className="btn btn-primary lg:w-full">
@@ -150,7 +178,7 @@ function GradientMaker({ gradient = {}, onMake }) {
   )
 }
 
-function GradientAdd({ open, onClose, gradient, onAdd }) {
+function GradientAdd({ open, onClose, gradient, onAdd, gradientList }) {
   const handleMake = useCallback(
     newGradient => {
       onAdd?.(newGradient)
@@ -162,7 +190,7 @@ function GradientAdd({ open, onClose, gradient, onAdd }) {
   return (
     <Modal open={open} onClose={onClose} className="lg:max-w-2xl">
       <Modal.Title>Add New Gradient</Modal.Title>
-      <GradientMaker gradient={gradient} onMake={handleMake} />
+      <GradientMaker gradientList={gradientList} gradient={gradient} onMake={handleMake} />
     </Modal>
   )
 }
