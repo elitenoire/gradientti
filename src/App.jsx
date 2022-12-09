@@ -1,12 +1,13 @@
-import { useState, useCallback, useEffect } from 'react'
+import { useRef, useState, useCallback, useEffect } from 'react'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faAnglesLeft, faPlus, faCode, faBars } from '@fortawesome/free-solid-svg-icons'
-import { useModalState } from './Modal'
 import Splash from './Splash'
 import GradientCopy from './GradientCopy'
 import GradientAdd from './GradientAdd'
+import GradientsView from './GradientsView'
 import useSequence from './useSequence'
 import useKeyNavigation from './useKeyNavigation'
+import useDialogState from './useDialogState'
 import { gradients } from './gradients'
 import { insertAt } from './utils'
 
@@ -22,31 +23,42 @@ function App() {
   const [loading, setLoading] = useState(true)
   const [gradientList, setGradientList] = useState(rawPalette)
 
-  const [openCopyModal, handleOpenCopyModal, handleCloseCopyModal] = useModalState()
-  const [openAddModal, handleOpenAddModal, handleCloseAddModal] = useModalState()
-
-  const { count, increment, decrement } = useSequence({
-    end: gradientList.length - 1,
+  const lastGradientIndex = gradientList.length - 1
+  const lastGradientIndexRef = useRef(lastGradientIndex)
+  const { count, increment, decrement, goto, sync } = useSequence({
+    end: lastGradientIndex,
   })
-  const onKey = useKeyNavigation({
+  const gradient = gradientList[count]
+  const { name, start, end } = gradient
+
+  const [openGradientsDrawer, handleOpenGradientsDrawer, handleCloseGradientsDrawer] = useDialogState()
+  const [openCopyModal, handleOpenCopyModal, handleCloseCopyModal] = useDialogState()
+  const [openAddModal, handleOpenAddModal, handleCloseAddModal] = useDialogState()
+
+  const handleKeyDown = useKeyNavigation({
     prev: decrement,
     next: increment,
     space: handleOpenAddModal,
     cKey: handleOpenCopyModal,
   })
 
-  const gradient = gradientList[count]
-  const { name, start, end } = gradient
-
   const handleGradientAdd = useCallback(
     newGradient => {
       setGradientList(list => {
-        const index = count === list.length - 1 ? 0 : count + 1
-        return insertAt(list, index, newGradient)
+        lastGradientIndexRef.current = list.length
+        return insertAt(list, count + 1, newGradient)
       })
+      sync(lastGradientIndexRef.current)
       increment()
     },
-    [count, increment]
+    [count, increment, sync]
+  )
+
+  const handleGradientSelect = useCallback(
+    selected => {
+      goto(selected)
+    },
+    [goto]
   )
 
   useEffect(() => {
@@ -64,8 +76,7 @@ function App() {
       {loading ? (
         <Splash />
       ) : (
-        // eslint-disable-next-line jsx-a11y/no-noninteractive-tabindex
-        <div role="presentation" className="h-full animate-fadeIn" tabIndex={0} onKeyDown={onKey}>
+        <div className="h-full animate-fadeIn">
           <header className="fixed inset-x-0 top-0 px-4 pt-2 text-white sm:pt-4">
             <div className="flex flex-wrap items-center justify-end gap-y-6">
               <div className="mr-auto flex items-center gap-x-2">
@@ -103,12 +114,20 @@ function App() {
                 <button
                   type="button"
                   className="flex h-11 w-11 items-center justify-center rounded-full bg-white/10 font-medium transition duration-200 ease-in-out hover:scale-110 hover:bg-white/20 active:scale-95 md:w-auto md:px-4"
+                  onClick={handleOpenGradientsDrawer}
                 >
                   <span className="mr-2 hidden md:inline">View Gradients</span>
                   <FontAwesomeIcon icon={faBars} />
                 </button>
               </div>
             </div>
+            <GradientsView
+              gradientList={gradientList}
+              value={count}
+              onSelect={handleGradientSelect}
+              open={openGradientsDrawer}
+              onClose={handleCloseGradientsDrawer}
+            />
             <GradientCopy start={start} end={end} open={openCopyModal} onClose={handleCloseCopyModal} />
             <GradientAdd
               gradientList={gradientList}
@@ -118,7 +137,13 @@ function App() {
               onClose={handleCloseAddModal}
             />
           </header>
-          <main className="h-full">
+          <main
+            role="presentation"
+            className="h-full"
+            // eslint-disable-next-line jsx-a11y/no-noninteractive-tabindex
+            tabIndex={0}
+            onKeyDown={handleKeyDown}
+          >
             <div className="absolute top-1/2 flex w-full -translate-y-1/2 items-center justify-between px-4 text-white">
               <button
                 type="button"
