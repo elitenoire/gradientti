@@ -1,19 +1,5 @@
-import { Fragment, useState, useCallback } from 'react'
+import { Fragment } from 'react'
 import { Dialog, Transition } from '@headlessui/react'
-
-export const useModalState = (initial = false) => {
-  const [open, setOpen] = useState(initial)
-
-  const handleOpen = useCallback(() => {
-    setOpen(true)
-  }, [])
-
-  const handleClose = useCallback(() => {
-    setOpen(false)
-  }, [])
-
-  return [open, handleOpen, handleClose]
-}
 
 function Modal({ open, onClose, className = '', children }) {
   return (
@@ -21,10 +7,10 @@ function Modal({ open, onClose, className = '', children }) {
       <Dialog as="div" className="relative z-10" onClose={onClose}>
         <Transition.Child
           as={Fragment}
-          enter="ease-out duration-300"
+          enter="transition-opacity ease-out duration-300"
           enterFrom="opacity-0"
           enterTo="opacity-100"
-          leave="ease-in duration-200"
+          leave="transition-opacity ease-in duration-200"
           leaveFrom="opacity-100"
           leaveTo="opacity-0"
         >

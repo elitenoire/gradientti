@@ -11,6 +11,9 @@ module.exports = {
       minHeight: {
         swatch: '110px',
       },
+      minWidth: {
+        button: '105px',
+      },
       keyframes: {
         fadeIn: {
           '0%': { opacity: 0 },

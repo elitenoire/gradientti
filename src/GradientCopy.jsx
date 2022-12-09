@@ -75,7 +75,7 @@ function GradientCopy({ start, end, open, onClose }) {
         </Transition>
       </div>
       <div className="flex items-center justify-between">
-        <label htmlFor="prefix-check" className="flex items-center font-medium text-gray-700">
+        <label htmlFor="prefix-check" className="flex items-center font-medium">
           <input
             id="prefix-check"
             checked={prefix}
