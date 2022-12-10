@@ -10,6 +10,7 @@ import useKeyNavigation from './useKeyNavigation'
 import useDialogState from './useDialogState'
 import { gradients } from './gradients'
 import { insertAt } from './utils'
+import logoUrl from '../public/logo.svg'
 
 const initialGradient = {
   name: 'Cosmic Tail',
@@ -79,7 +80,7 @@ function App() {
           <header className="fixed inset-x-0 top-0 z-30 px-4 pt-2 text-white sm:pt-4">
             <div className="flex flex-wrap items-center justify-end gap-y-6">
               <div className="mr-auto flex items-center gap-x-2">
-                <img className="w-9" src="/logo.svg" alt="Gradientti logo" />
+                <img className="w-9" src={logoUrl} alt="Gradientti logo" />
                 <span className="hidden text-2xl font-bold drop-shadow md:inline">Gradientti</span>
               </div>
               <div className=" order-last w-full text-center sm:order-none sm:mr-4 sm:w-auto lg:mr-6">
