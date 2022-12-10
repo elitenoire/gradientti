@@ -1,12 +1,12 @@
 import { useReducer, useCallback } from 'react'
+import { clamp } from './utils'
 
 const INC = 'INCREMENT'
 const DEC = 'DECREMENT'
 const GOTO = 'GOTO'
+const SYNC = 'SYNC'
 
-const clamp = (num, lower, upper) => (upper ? Math.min(Math.max(num, lower), upper) : Math.min(num, lower))
-
-const reducer = (state, { type, index }) => {
+const reducer = (state, { type, bounds, index }) => {
   const { count, start, end } = state
   const total = end - start + 1
 
@@ -25,6 +25,11 @@ const reducer = (state, { type, index }) => {
       }
     case GOTO:
       return { ...state, direction: 0, count: clamp(index, start, end) }
+    case SYNC:
+      return {
+        ...state,
+        [bounds]: index,
+      }
     default:
       return state
   }
@@ -43,11 +48,14 @@ const useSequence = ({ count, direction = 0, start = 0, end = 4 }) => {
 
   const goto = useCallback(index => dispatch({ type: GOTO, index }), [dispatch])
 
+  const sync = useCallback((index, bounds = 'end') => dispatch({ type: SYNC, bounds, index }), [dispatch])
+
   return {
     ...state,
     increment,
     decrement,
     goto,
+    sync,
   }
 }
 

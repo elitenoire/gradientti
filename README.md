@@ -31,6 +31,24 @@ To see how well you understand loops, conditions and arrays in Javascript.
 
 </details>
 
+<details>
+<summary><b>Day 0️⃣2️⃣</b></summary>
+
+Add the following features to the gradient site you built for day one’s task:
+
+- A beautiful page loader on a white background that shows on loading the page
+- A button to add more gradients to the default gradient list
+- The button should open a modal box containing two input fields for the two color codes and a button to save them.
+- Give your gradient website a good name e.g uigrids.
+- Create a simple logo for your website (can be a plain text) and add it to the website
+- A button to view and copy the css for the gradient website.
+- The button should also open a modal box displaying the css of the gradient and a button to copy. Check https://uigradients.com.
+- A hamburger icon with this text beside it “View all gradients”
+- The hamburger icon should open a scrollable white colored overlay containing the gradients as cards. Check https://uigradients.com for more information
+- Assign a creative name to each gradient
+
+</details>
+
 ### 🎨 Default Gradient List
 
 - #FBD3E9, #BB377D
