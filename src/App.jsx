@@ -1,6 +1,6 @@
 import { useRef, useState, useCallback, useEffect } from 'react'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faAnglesLeft, faPlus, faCode, faBars } from '@fortawesome/free-solid-svg-icons'
+import { faAnglesLeft, faPlus, faCode } from '@fortawesome/free-solid-svg-icons'
 import Splash from './Splash'
 import GradientCopy from './GradientCopy'
 import GradientAdd from './GradientAdd'
@@ -31,7 +31,6 @@ function App() {
   const gradient = gradientList[count]
   const { name, start, end } = gradient
 
-  const [openGradientsDrawer, handleOpenGradientsDrawer, handleCloseGradientsDrawer] = useDialogState()
   const [openCopyModal, handleOpenCopyModal, handleCloseCopyModal] = useDialogState()
   const [openAddModal, handleOpenAddModal, handleCloseAddModal] = useDialogState()
 
@@ -77,7 +76,7 @@ function App() {
         <Splash />
       ) : (
         <div className="h-full animate-fadeIn">
-          <header className="fixed inset-x-0 top-0 px-4 pt-2 text-white sm:pt-4">
+          <header className="fixed inset-x-0 top-0 z-30 px-4 pt-2 text-white sm:pt-4">
             <div className="flex flex-wrap items-center justify-end gap-y-6">
               <div className="mr-auto flex items-center gap-x-2">
                 <img className="w-9" src="/logo.svg" alt="Gradientti logo" />
@@ -111,23 +110,9 @@ function App() {
                 >
                   <FontAwesomeIcon icon={faPlus} />
                 </button>
-                <button
-                  type="button"
-                  className="flex h-11 w-11 items-center justify-center rounded-full bg-white/10 font-medium transition duration-200 ease-in-out hover:scale-110 hover:bg-white/20 active:scale-95 md:w-auto md:px-4"
-                  onClick={handleOpenGradientsDrawer}
-                >
-                  <span className="mr-2 hidden md:inline">View Gradients</span>
-                  <FontAwesomeIcon icon={faBars} />
-                </button>
+                <GradientsView gradientList={gradientList} value={count} onSelect={handleGradientSelect} />
               </div>
             </div>
-            <GradientsView
-              gradientList={gradientList}
-              value={count}
-              onSelect={handleGradientSelect}
-              open={openGradientsDrawer}
-              onClose={handleCloseGradientsDrawer}
-            />
             <GradientCopy start={start} end={end} open={openCopyModal} onClose={handleCloseCopyModal} />
             <GradientAdd
               gradientList={gradientList}

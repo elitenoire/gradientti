@@ -4,7 +4,7 @@ import { Dialog, Transition } from '@headlessui/react'
 function Modal({ open, onClose, className = '', children }) {
   return (
     <Transition appear show={open} as={Fragment}>
-      <Dialog as="div" className="relative z-10" onClose={onClose}>
+      <Dialog as="div" className="relative z-40" onClose={onClose}>
         <Transition.Child
           as={Fragment}
           enter="transition-opacity ease-out duration-300"
