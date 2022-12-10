@@ -9,10 +9,18 @@ module.exports = {
         sans: ['Kumbh Sans', ...defaultTheme.fontFamily.sans],
       },
       minHeight: {
-        swatch: '110px',
+        swatch: '135px',
       },
       minWidth: {
         button: '105px',
+      },
+      transitionTimingFunction: {
+        ease: 'cubic-bezier(.25, 0, .5, 1)',
+        elastic: 'cubic-bezier(.5, .75, .75, 1.25)',
+      },
+      transitionDuration: {
+        350: '350ms',
+        400: '400ms',
       },
       keyframes: {
         fadeIn: {
