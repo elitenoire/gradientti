@@ -1,7 +1,7 @@
 import { Fragment } from 'react'
 import { Transition } from '@headlessui/react'
 
-function DrawerStyle({ title, children }) {
+function DrawerStyle({ children }) {
   return (
     <Transition as={Fragment}>
       <div className="fixed z-50">

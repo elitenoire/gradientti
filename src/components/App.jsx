@@ -2,15 +2,13 @@ import { useRef, useState, useCallback, useEffect } from 'react'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faAnglesLeft, faPlus, faCode } from '@fortawesome/free-solid-svg-icons'
 import Splash from './Splash'
+import ColorPanel from './ColorPanel'
 import GradientCopy from './GradientCopy'
 import GradientAdd from './GradientAdd'
 import GradientsView from './GradientsView'
-import useSequence from './useSequence'
-import useKeyNavigation from './useKeyNavigation'
-import useDialogState from './useDialogState'
-import { gradients } from './gradients'
-import { insertAt } from './utils'
-import logoUrl from '../public/logo.svg'
+import { useSequence, useDialogState, useKeyNavigation } from '../hooks'
+import { gradients, insertAt } from '../lib'
+import logoUrl from '../../public/logo.svg'
 
 const initialGradient = {
   name: 'Cosmic Tail',
@@ -84,31 +82,13 @@ function App() {
                 <span className="hidden text-2xl font-bold drop-shadow md:inline">Gradientti</span>
               </div>
               <div className=" order-last w-full text-center sm:order-none sm:mr-4 sm:w-auto lg:mr-6">
-                <div className="inline-flex gap-x-4 overflow-hidden rounded-full bg-white/10 py-2 px-3 font-bold sm:py-4 sm:px-6 ">
-                  <p className="flex flex-wrap items-center justify-center gap-1 text-sm sm:text-base">
-                    <span className="h-4 w-4 rounded-full shadow-inner" style={{ backgroundColor: start }} />
-                    {start}
-                  </p>
-                  <span>→</span>
-                  <p className="flex flex-wrap items-center justify-center gap-1 text-sm sm:text-base">
-                    <span className="h-4 w-4 rounded-full shadow-inner" style={{ backgroundColor: end }} />
-                    {end}
-                  </p>
-                </div>
+                <ColorPanel start={start} end={end} />
               </div>
               <div className="flex gap-x-2 lg:gap-x-4">
-                <button
-                  type="button"
-                  className="flex h-11 w-11 items-center justify-center rounded-full bg-white/10 transition duration-200 ease-in-out hover:scale-110 hover:bg-white/20 active:scale-95"
-                  onClick={handleOpenCopyModal}
-                >
+                <button type="button" className="btn-menu btn-ghost" onClick={handleOpenCopyModal}>
                   <FontAwesomeIcon icon={faCode} />
                 </button>
-                <button
-                  type="button"
-                  className="flex h-11 w-11 items-center justify-center rounded-full bg-white/10 transition duration-200 ease-in-out hover:scale-110 hover:bg-white/20 active:scale-95"
-                  onClick={handleOpenAddModal}
-                >
+                <button type="button" className="btn-menu btn-ghost" onClick={handleOpenAddModal}>
                   <FontAwesomeIcon icon={faPlus} />
                 </button>
                 <GradientsView gradientList={gradientList} value={count} onSelect={handleGradientSelect} />
@@ -131,20 +111,12 @@ function App() {
             onKeyDown={handleKeyDown}
           >
             <div className="absolute top-1/2 flex w-full -translate-y-1/2 items-center justify-between px-4 text-white">
-              <button
-                type="button"
-                className="rounded-full bg-white/10 p-4 transition duration-200 ease-in-out hover:scale-110 hover:bg-white/20 active:scale-95"
-                onClick={decrement}
-              >
+              <button type="button" className="btn-ghost p-4" onClick={decrement}>
                 <FontAwesomeIcon icon={faAnglesLeft} size="lg" />
               </button>
               <p className="text-center text-lg font-bold opacity-70 drop-shadow sm:text-3xl lg:text-5xl">{name}</p>
-              <button
-                type="button"
-                className="rounded-full bg-white/10 p-4 transition duration-200 ease-in-out hover:scale-110 hover:bg-white/20 active:scale-95"
-                onClick={increment}
-              >
-                <FontAwesomeIcon icon={faAnglesLeft} display="block" size="lg" flip="horizontal" />
+              <button type="button" className="btn-ghost p-4" onClick={increment}>
+                <FontAwesomeIcon icon={faAnglesLeft} size="lg" flip="horizontal" />
               </button>
             </div>
             <div className="h-full" style={{ backgroundImage: `linear-gradient(to right, ${start}, ${end})` }} />

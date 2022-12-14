@@ -26,6 +26,14 @@
     @apply bg-gradient-to-tr from-fuchsia-500 via-violet-600 to-blue-400 hover:bg-gradient-to-tl focus:ring-violet-300;
   }
 
+  .btn-ghost {
+    @apply rounded-full bg-white/10 transition duration-200 ease-in-out hover:scale-110 hover:bg-white/20 active:scale-95;
+  }
+
+  .btn-menu {
+    @apply flex h-11 w-11 items-center justify-center;
+  }
+
   .input {
     @apply h-11 w-full rounded-xl border border-transparent bg-gray-200 pl-3 pr-3 focus:bg-transparent focus:ring-violet-500;
   }
@@ -36,5 +44,9 @@
 
   .text-error {
     @apply mt-1 text-xs font-medium tracking-wide text-red-500;
+  }
+
+  .color-ring {
+    @apply h-5 w-5 rounded-full ring-2 ring-gray-800 ring-offset-2;
   }
 }

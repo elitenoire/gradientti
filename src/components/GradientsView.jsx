@@ -1,27 +1,20 @@
 import { useCallback, Fragment } from 'react'
-import { useClipboard } from 'use-clipboard-copy'
 import { Listbox, Transition } from '@headlessui/react'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faBars, faClose } from '@fortawesome/free-solid-svg-icons'
 import DrawerStyle from './DrawerStyle'
+import { useCopyable } from '../hooks'
 
 function CopyableColor({ color, className = '' }) {
-  const { copy, copied } = useClipboard({
-    copiedTimeout: 500,
+  const { copied, onCopy } = useCopyable({
+    timeout: 500,
+    text: color,
   })
-
-  const handleClick = useCallback(
-    e => {
-      e.stopPropagation()
-      copy(color)
-    },
-    [copy, color]
-  )
 
   return (
     <span
       role="presentation"
-      onClick={handleClick}
+      onClick={onCopy}
       className={`flex-1 origin-bottom py-1 font-medium transition-transform hover:scale-110 ${className}`}
       style={{ background: color }}
     >
@@ -40,7 +33,7 @@ function GradientsView({ gradientList, value, onSelect }) {
 
   return (
     <Listbox horizontal value={value} onChange={handleChange}>
-      <Listbox.Button className="flex h-11 w-11 items-center justify-center rounded-full bg-white/10 font-medium transition duration-200 ease-in-out hover:scale-110 hover:bg-white/20 active:scale-95 md:w-auto md:px-4">
+      <Listbox.Button className="btn-menu btn-ghost font-medium md:w-auto md:px-4">
         <span className="mr-2 hidden md:inline">View Gradients</span>
         <FontAwesomeIcon icon={faBars} />
       </Listbox.Button>

@@ -3,7 +3,7 @@ import { useFloating, flip, offset, shift, arrow } from '@floating-ui/react-dom'
 import { Popover, Transition } from '@headlessui/react'
 import { HexColorPicker, HexColorInput } from 'react-colorful'
 import Modal from './Modal'
-import { checkIfExist } from './utils'
+import { checkIfExist } from '../lib'
 
 const positions = {
   top: 'bottom',
@@ -83,6 +83,18 @@ function ColorInput({ color, onChange, invalid, id }) {
   )
 }
 
+function FormField({ label, id, className, invalid, errMsg, children }) {
+  return (
+    <div className={className}>
+      <label htmlFor={id} className="text-xs font-medium">
+        {label}
+      </label>
+      {children}
+      {invalid && <span className="text-error">{errMsg}</span>}
+    </div>
+  )
+}
+
 function GradientMaker({ gradientList = [], gradient = {}, onMake }) {
   const [newGradient, setNewGradient] = useState(gradient)
   const [errors, setErrors] = useState({})
@@ -131,30 +143,37 @@ function GradientMaker({ gradientList = [], gradient = {}, onMake }) {
       />
       <form className="flex-1" onSubmit={handleSubmit}>
         <div className="flex flex-wrap gap-4">
-          <div className="grow basis-52">
-            <label htmlFor="gradient-start" className="text-xs font-medium">
-              Start Color
-            </label>
+          <FormField
+            className="grow basis-52"
+            id="gradient-start"
+            label="Start Color"
+            invalid={errors.gradient}
+            errMsg="Gradient already exists."
+          >
             <ColorInput
               id="gradient-start"
               invalid={errors.gradient}
               color={start}
               onChange={handleColorChange('start')}
             />
-            {errors.gradient && <span className="text-error">Gradient already exists.</span>}
-          </div>
-          <div className="grow basis-52">
-            <label htmlFor="gradient-end" className="text-xs font-medium">
-              End Color
-            </label>
+          </FormField>
+          <FormField
+            className="grow basis-52"
+            id="gradient-end"
+            label="End Color"
+            invalid={errors.gradient}
+            errMsg="Gradient already exists."
+          >
             <ColorInput id="gradient-end" invalid={errors.gradient} color={end} onChange={handleColorChange('end')} />
-            {errors.gradient && <span className="text-error">Gradient already exists.</span>}
-          </div>
+          </FormField>
         </div>
-        <div className="my-4">
-          <label htmlFor="gradient-name" className="text-xs font-medium">
-            Gradient Name
-          </label>
+        <FormField
+          className="my-4"
+          id="gradient-name"
+          label="Gradient Name"
+          invalid={errors.name}
+          errMsg="Name already exists."
+        >
           <input
             id="gradient-name"
             value={name}
@@ -166,8 +185,7 @@ function GradientMaker({ gradientList = [], gradient = {}, onMake }) {
             pattern="[a-zA-Z]+[\s]?[A-Za-z]+"
             required
           />
-          {errors.name && <span className="text-error">Name already exists.</span>}
-        </div>
+        </FormField>
         <div className="pt-1 text-right">
           <button type="submit" className="btn btn-primary lg:w-full">
             Save

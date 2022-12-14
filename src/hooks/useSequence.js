@@ -1,5 +1,5 @@
 import { useReducer, useCallback } from 'react'
-import { clamp } from './utils'
+import { clamp } from '../lib/utils'
 
 const INC = 'INCREMENT'
 const DEC = 'DECREMENT'
