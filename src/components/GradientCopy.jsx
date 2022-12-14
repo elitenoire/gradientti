@@ -1,5 +1,4 @@
 import { useState, useCallback, useEffect } from 'react'
-import { useClipboard } from 'use-clipboard-copy'
 import { Transition } from '@headlessui/react'
 import { highlightAll } from 'prismjs/components/prism-core'
 import 'prismjs/components/prism-css'
@@ -7,8 +6,8 @@ import 'prismjs/plugins/line-numbers/prism-line-numbers'
 import 'prismjs/plugins/line-numbers/prism-line-numbers.css'
 import 'prismjs/plugins/normalize-whitespace/prism-normalize-whitespace'
 import 'prism-themes/themes/prism-duotone-dark.css'
-
 import Modal from './Modal'
+import { useCopyable } from '../hooks'
 
 const gradientCode = ({ start, end, prefix }) =>
   prefix
@@ -38,26 +37,24 @@ function CodeBlock({ code }) {
 
 function GradientCopy({ start, end, open, onClose }) {
   const [prefix, setPrefix] = useState(true)
-  const { copy, copied } = useClipboard({
-    copiedTimeout: 2000,
-  })
 
   const code = gradientCode({ start, end, prefix })
+
+  const { copied, onCopy } = useCopyable({
+    timeout: 2000,
+    text: code,
+  })
 
   const handleChange = useCallback(e => {
     setPrefix(e.target.checked)
   }, [])
 
-  const handleCopy = useCallback(() => {
-    copy(code)
-  }, [copy, code])
-
   return (
     <Modal open={open} onClose={onClose}>
       <Modal.Title className="flex items-center justify-end">
         <span className="mr-auto">Copy CSS Code</span>
-        <span className="h-5 w-5 rounded-full ring-2 ring-gray-800 ring-offset-2" style={{ backgroundColor: start }} />
-        <span className="h-5 w-5 rounded-full ring-2 ring-gray-800 ring-offset-2" style={{ backgroundColor: end }} />
+        <span className="color-ring" style={{ backgroundColor: start }} />
+        <span className="color-ring" style={{ backgroundColor: end }} />
       </Modal.Title>
       <div className="relative mb-4">
         <CodeBlock code={code} />
@@ -85,7 +82,7 @@ function GradientCopy({ start, end, open, onClose }) {
           />
           <span className="text-sm">Vendor Prefix</span>
         </label>
-        <button type="button" className="btn btn-primary" onClick={handleCopy}>
+        <button type="button" className="btn btn-primary" onClick={onCopy}>
           Copy CSS
         </button>
       </div>
